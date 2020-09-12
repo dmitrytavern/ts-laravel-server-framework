@@ -3,18 +3,18 @@ import path = require("path");
 import * as express from 'express'
 import * as helmet from "helmet";
 import * as cookieParser from "cookie-parser"
-import { I18n } from 'i18n'
+import * as i18n from 'i18n'
+
 import Kernel from '@app/Http/Kernel'
 
 const app 		= express();
 const router 	= express.Router()
 const kernel 	= new Kernel()
-const i18n    = new I18n()
 
 i18n.configure({
-	locales: process.env.LANG_LANGUAGES.split(','),
-	defaultLocale: process.env.LANG_DEFAULT,
-	directory: path.resolve(process.env.PATH_LANG)
+	locales: process.env.LANG_LANGUAGES!.split(',').map(x => x.trim()),
+	defaultLocale: process.env.LANG_DEFAULT!,
+	directory: path.resolve(process.env.PATH_LANG!)
 })
 
 
@@ -33,7 +33,7 @@ app.use(i18n.init)
 * 	Init view engine
 * */
 
-app.set('views', path.resolve(process.env.PATH_VIEWS));
+app.set('views', path.resolve(process.env.PATH_VIEWS!));
 app.set('view engine', 'pug');
 
 
@@ -41,7 +41,7 @@ app.set('view engine', 'pug');
 * 	Init static directories
 * */
 
-app.use(express.static(process.env.PATH_PUBLIC))
+app.use(express.static(process.env.PATH_PUBLIC!))
 
 
 /*
@@ -59,8 +59,8 @@ for (const middlewareRoute of kernel.middleware) {
 * 	Init Routes
 * */
 
-import web from "@routes/web";
-import api from "@routes/api";
+import web from "@routes/web"
+import api from "@routes/api"
 
 web(router)
 api(router)

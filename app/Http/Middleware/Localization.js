@@ -1,7 +1,9 @@
 const path = require('path')
 
 const defaultLocale = process.env.LANG_DEFAULT
-const locales = process.env.LANG_LANGUAGES.split(',')
+const locales = process.env.LANG_LANGUAGES
+	.split(',')
+	.map(x => x.trim())
 
 
 

@@ -1,4 +1,4 @@
-export default class HttpKernel implements IHttpKernel {
+export default class Kernel implements IKernel {
 
 	/*
 	*   Global middleware

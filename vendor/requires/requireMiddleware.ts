@@ -1,10 +1,12 @@
 const path = require('path')
 
-export default function requireMiddleware(...middlewareNames) {
+export default function requireMiddleware(...middlewareNames: Array<string>) {
+	const _class: IKernel = this
+
 	const arr = []
 	for (let middlewareName of middlewareNames) {
-		if (this.routeMiddleware.hasOwnProperty(middlewareName)) {
-			const route = path.resolve(this.routeMiddleware[middlewareName])
+		if (_class.routeMiddleware.hasOwnProperty(middlewareName)) {
+			const route = path.resolve(_class.routeMiddleware[middlewareName])
 
 			const middleware: Middleware = new (require(route))()
 

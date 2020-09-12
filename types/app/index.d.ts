@@ -1,15 +1,15 @@
-interface RouteMethods {
-	view(string: string): any
-	middleware(...string): any
-}
+import { NextFunction } from "express-serve-static-core";
 
-interface IHttpKernel {
-	middleware: Array<string>
-	routeMiddleware: {
-		[key: string]: string
+
+declare global {
+	class Middleware {
+		handle(req: Express.Request, res: Express.Response, next: NextFunction): any
 	}
-}
 
-declare class Middleware {
-	handle(req, res, next): any
+	interface IKernel {
+		middleware: Array<string>
+		routeMiddleware: {
+			[key: string]: string
+		}
+	}
 }
