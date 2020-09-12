@@ -1,0 +1,10 @@
+# Folders
+/node_modules
+.idea
+
+# Files
+.env
+
+# Logs
+npm-debug.log
+yarn-error.log

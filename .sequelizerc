@@ -1,0 +1,10 @@
+const path = require('path');
+require('dotenv').config()
+
+const env = process.env
+
+module.exports = {
+  'migrations-path': path.resolve(env.PATH_MIGRATIONS),
+  'seeders-path': path.resolve(env.PATH_SEEDS),
+  'models-path': path.resolve(env.PATH_MODELS)
+}
