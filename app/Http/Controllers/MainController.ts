@@ -1,8 +1,9 @@
-import Express from "express";
+import {Request, Response} from "express";
+
 
 export default class MainController {
 
-	index(req: Express.Request, res: Express.Response) {
+	index(req: Request, res: Response) {
 		res.render('index', {title: 'Wow', message: 'Hello'})
 	}
 

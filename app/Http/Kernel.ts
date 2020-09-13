@@ -1,10 +1,10 @@
-export default class Kernel implements HttpKernel {
+export default class Kernel implements HttpKernel.Class {
 
 	/*
 	*   Global middleware
 	* */
 
-	public readonly middleware: Array<string> = [
+	public readonly middleware: HttpKernel.KernelMiddleware = [
 		'app/Http/Middleware/Localization'
 	]
 
@@ -14,7 +14,7 @@ export default class Kernel implements HttpKernel {
 	*   Route middleware
 	* */
 
-	public readonly routeMiddleware: any = {
+	public readonly routeMiddleware: HttpKernel.KernelRouteMiddleware = {
 		'auth': 'app/Http/Middleware/Authenticate'
 	}
 }

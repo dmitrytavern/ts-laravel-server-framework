@@ -1,7 +1,6 @@
-import './vendor/aliases/index'
+import './vendor/aliases'
 import app from '@vendor/express'
 import sequelize from '@database/index'
-
 
 async function assertDatabaseConnectionOk() {
 	try {

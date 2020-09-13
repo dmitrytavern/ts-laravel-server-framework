@@ -1,21 +1,14 @@
 import path = require("path");
 
 import * as express from 'express'
-import * as helmet from "helmet";
+import * as helmet from "helmet"
 import * as cookieParser from "cookie-parser"
-import * as i18n from 'i18n'
 
-import Http from "@vendor/Http";
+import Http from "@vendor/http"
 
-const app 		= express();
+const app 		= express()
 const router 	= express.Router()
 const http    = new Http()
-
-i18n.configure({
-	locales: process.env.LANG_LANGUAGES!.split(',').map(x => x.trim()),
-	defaultLocale: process.env.LANG_DEFAULT!,
-	directory: path.resolve(process.env.PATH_LANG!)
-})
 
 
 
@@ -23,18 +16,17 @@ i18n.configure({
 *   Init default libs
 * */
 
-app.use(helmet());
-app.use(express.json());
-app.use(cookieParser());
-app.use(i18n.init)
+app.use(helmet())
+app.use(express.json())
+app.use(cookieParser())
 
 
 /*
 * 	Init view engine
 * */
 
-app.set('views', path.resolve(process.env.PATH_VIEWS!));
-app.set('view engine', 'pug');
+app.set('views', path.resolve(process.env.PATH_VIEWS!))
+app.set('view engine', 'pug')
 
 
 /*
@@ -45,11 +37,11 @@ app.use(express.static(process.env.PATH_PUBLIC!))
 
 
 /*
-* 	Init middlewares
+* 	Init middleware
 * */
 
-for (const handle of http.getGlobalMiddlewareActions()) {
-	app.use(handle)
+for (const middleware of http.getGlobalMiddleware()) {
+	app.use(middleware)
 }
 
 
@@ -62,7 +54,7 @@ import api from "@routes/api"
 
 const methods: RouterActions = {
 	view: http.getControllerAction.bind(http),
-	middleware: http.getRouteMiddlewareAction.bind(http)
+	middleware: http.getMiddleware.bind(http)
 }
 
 web(router, methods)

@@ -1,28 +1,7 @@
-import requireControllers from "@vendor/Http/requires/requireController";
-import requireMiddleware from "@vendor/Http/requires/requireMiddleware";
-import requireRouteMiddleware from "@vendor/Http/requires/requireRouteMiddleware";
-
-interface IHttp {
-	getControllerAction(exp: string): RouterFunction
-
-	getGlobalMiddlewareActions(): RouterFunction[]
-
-	getMiddlewareAction(middlewareName: string): RouterFunction
-
-	getRouteMiddlewareAction(middleware: string | string[]): RouterFunction | RouterFunction[]
-}
-
-interface IHttpMiddleware {
-	[key: string]: {
-		new (): Middleware
-	}
-}
-
-interface IHttpController {
-	[key: string]: {
-		new (): Controller
-	}
-}
+import { IHttp, IHttpController, IHttpMiddleware } from "@vendor/http/types";
+import requireControllers from "@vendor/http/requires/requireController";
+import requireMiddleware from "@vendor/http/requires/requireMiddleware";
+import requireRouteMiddleware from "@vendor/http/requires/requireRouteMiddleware";
 
 
 export default class Http implements IHttp {
@@ -39,7 +18,7 @@ export default class Http implements IHttp {
 	*   Controllers
 	* */
 
-	getControllerAction(exp: string): RouterFunction {
+	public getControllerAction(exp: string): RouterFunction {
 		const [controllerName, controllerAction] = exp.split('@')
 
 		if (!controllerName || !controllerAction) throw new Error(`[HTTP]: Invalid exp: ${exp}`)
@@ -67,7 +46,7 @@ export default class Http implements IHttp {
 	*   Middleware
 	* */
 
-	getGlobalMiddlewareActions(): RouterFunction[] {
+	public getGlobalMiddleware(): RouterFunction[] {
 		const arr = []
 		for (const [middlewareName, middlewareClass] of Object.entries(this.middleware)) {
 			const middleware = new middlewareClass()
@@ -76,7 +55,19 @@ export default class Http implements IHttp {
 		return arr
 	}
 
-	getMiddlewareAction(middlewareName: string): RouterFunction {
+	public getMiddleware(middleware: string | string[]): RouterFunction | RouterFunction[] {
+		if (typeof middleware === 'string') {
+			return this._getMiddleware(middleware)
+		} else {
+			const arr = []
+			for (const middlewareName of middleware) {
+				arr.push(this._getMiddleware(middlewareName))
+			}
+			return arr
+		}
+	}
+
+	private _getMiddleware(middlewareName: string): RouterFunction {
 		const Middleware = this.routeMiddleware[middlewareName]
 
 		if (Middleware) {
@@ -89,17 +80,5 @@ export default class Http implements IHttp {
 			}
 		}
 		throw new Error(`[HTTP]: Middleware '${middlewareName}' not found `)
-	}
-
-	getRouteMiddlewareAction(middleware: string | string[]): RouterFunction | RouterFunction[] {
-		if (typeof middleware === 'string') {
-			return this.getMiddlewareAction(middleware)
-		} else {
-			const arr = []
-			for (const middlewareName of middleware) {
-				arr.push(this.getMiddlewareAction(middlewareName))
-			}
-			return arr
-		}
 	}
 }

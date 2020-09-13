@@ -1,14 +1,18 @@
-import Express from "express";
+import * as i18n from 'i18n'
+import { Request, Response, NextFunction } from "express";
 const path = require('path')
 
 const defaultLocale: string = process.env.LANG_DEFAULT!
-const locales: string[] = process.env.LANG_LANGUAGES!
-	.split(',')
-	.map(x => x.trim())
+const locales: string[] = process.env.LANG_LANGUAGES!.split(',').map(x => x.trim())
+
+i18n.configure({
+	locales,
+	defaultLocale,
+	directory: path.resolve(process.env.PATH_LANG!)
+})
 
 
-
-function routeFunction(req: Express.Request, res: Express.Response) {
+function routeFunction(req: Request, res: Response) {
 	return function (string: string) {
 		let val = path.join('/', string);
 		if (res.locale !== defaultLocale) {
@@ -18,7 +22,7 @@ function routeFunction(req: Express.Request, res: Express.Response) {
 	}
 }
 
-function routeLocalized(req: Express.Request, res: Express.Response) {
+function routeLocalizedFunction(req: Request, res: Response) {
 	return function (string: string) {
 		let val = string
 		if (val === defaultLocale) val = ''
@@ -29,9 +33,10 @@ function routeLocalized(req: Express.Request, res: Express.Response) {
 
 
 export default class Localization implements Middleware {
-	handle(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
-		const route = req.url.split('/')
-		const routeLocale = route[1]
+	handle(req: Request, res: Response, next: NextFunction) {
+		i18n.init(req, res)
+
+		const routeLocale = req.url.split('/')[1]
 
 		if (locales.includes(routeLocale)) {
 			if (res.locale !== routeLocale) res.setLocale(routeLocale)
@@ -47,7 +52,7 @@ export default class Localization implements Middleware {
 		}
 
 		res.locals.route = routeFunction(req, res)
-		res.locals.routeLocalized = routeLocalized(req, res)
+		res.locals.routeLocalized = routeLocalizedFunction(req, res)
 
 		next()
 	}

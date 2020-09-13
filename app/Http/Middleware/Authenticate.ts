@@ -1,7 +1,7 @@
-import Express from 'express'
+import {Request, Response, NextFunction} from 'express'
 
 export default class Authenticate {
-	handle(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
+	handle(req: Request, res: Response, next: NextFunction) {
 		console.log('Auth test')
 
 		next()

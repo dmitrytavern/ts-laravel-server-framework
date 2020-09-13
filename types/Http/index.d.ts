@@ -1,9 +1,6 @@
 import Express from "express";
 
-
 declare global {
-	type RouterFunction = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => void
-
 	class Middleware {
 		[key: string]: any
 
@@ -14,19 +11,15 @@ declare global {
 		[key: string]: any
 	}
 
-
-
-	interface HttpKernel {
-		middleware: Array<string>
-		routeMiddleware: {
+	namespace HttpKernel {
+		export type KernelMiddleware = Array<string>
+		export interface KernelRouteMiddleware {
 			[key: string]: string
 		}
-	}
 
-	interface Router extends Express.Router {}
-
-	interface RouterActions {
-		view(str: string): RouterFunction,
-		middleware(str: string | string[]): RouterFunction | RouterFunction[]
+		export interface Class {
+			middleware: KernelMiddleware
+			routeMiddleware: KernelRouteMiddleware
+		}
 	}
 }
