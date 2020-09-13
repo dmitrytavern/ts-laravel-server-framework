@@ -13,13 +13,14 @@
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "glob": "^7.1.6",
     "helmet": "^4.1.1",
     "i18n": "^0.13.2",
     "module-alias": "^2.2.2",
     "mysql2": "^2.1.0",
+    "pug": "^3.0.0",
     "sequelize": "^6.3.5",
-    "sequelize-cli": "^6.2.0",
-    "pug": "^3.0.0"
+    "sequelize-cli": "^6.2.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",

@@ -1,7 +1,4 @@
-import { Router } from "express";
-import { view, middleware } from '@vendor/route'
-
-export default function (app: Router): void {
+export default function (app: Router, { view, middleware }: RouterActions): void {
 
 	app.get('/', view('MainController@index'))
 	app.get('/api', middleware('auth'), view('MainController@index'))

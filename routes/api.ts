@@ -1,3 +1,1 @@
-import { Router } from "express";
-
-export default function (app: Router) {}
+export default function (app: Router, { view, middleware }: RouterActions): void {}

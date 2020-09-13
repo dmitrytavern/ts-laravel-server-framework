@@ -1,4 +1,4 @@
-export default class Kernel implements IKernel {
+export default class Kernel implements HttpKernel {
 
 	/*
 	*   Global middleware
@@ -17,5 +17,4 @@ export default class Kernel implements IKernel {
 	public readonly routeMiddleware: any = {
 		'auth': 'app/Http/Middleware/Authenticate'
 	}
-
 }

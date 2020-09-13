@@ -1,14 +1,15 @@
+import Express from "express";
 const path = require('path')
 
-const defaultLocale = process.env.LANG_DEFAULT
-const locales = process.env.LANG_LANGUAGES
+const defaultLocale: string = process.env.LANG_DEFAULT!
+const locales: string[] = process.env.LANG_LANGUAGES!
 	.split(',')
 	.map(x => x.trim())
 
 
 
-function routeFunction(req, res) {
-	return function (string) {
+function routeFunction(req: Express.Request, res: Express.Response) {
+	return function (string: string) {
 		let val = path.join('/', string);
 		if (res.locale !== defaultLocale) {
 			val = path.join('/', res.locale, string)
@@ -17,8 +18,8 @@ function routeFunction(req, res) {
 	}
 }
 
-function routeLocalized(req, res) {
-	return function (string) {
+function routeLocalized(req: Express.Request, res: Express.Response) {
+	return function (string: string) {
 		let val = string
 		if (val === defaultLocale) val = ''
 		return path.join('/', val, req.url === '/' ? '' : req.url)
@@ -27,8 +28,8 @@ function routeLocalized(req, res) {
 
 
 
-class Localization {
-	handle(req, res, next) {
+export default class Localization implements Middleware {
+	handle(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
 		const route = req.url.split('/')
 		const routeLocale = route[1]
 
@@ -51,5 +52,3 @@ class Localization {
 		next()
 	}
 }
-
-module.exports = Localization

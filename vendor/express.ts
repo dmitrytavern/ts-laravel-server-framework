@@ -5,11 +5,11 @@ import * as helmet from "helmet";
 import * as cookieParser from "cookie-parser"
 import * as i18n from 'i18n'
 
-import Kernel from '@app/Http/Kernel'
+import Http from "@vendor/Http";
 
 const app 		= express();
 const router 	= express.Router()
-const kernel 	= new Kernel()
+const http    = new Http()
 
 i18n.configure({
 	locales: process.env.LANG_LANGUAGES!.split(',').map(x => x.trim()),
@@ -48,10 +48,8 @@ app.use(express.static(process.env.PATH_PUBLIC!))
 * 	Init middlewares
 * */
 
-for (const middlewareRoute of kernel.middleware) {
-	const Module = require(path.resolve(middlewareRoute))
-	const middleware: Middleware = new (Module)()
-	app.use(middleware.handle.bind(middleware))
+for (const handle of http.getGlobalMiddlewareActions()) {
+	app.use(handle)
 }
 
 
@@ -62,8 +60,13 @@ for (const middlewareRoute of kernel.middleware) {
 import web from "@routes/web"
 import api from "@routes/api"
 
-web(router)
-api(router)
+const methods: RouterActions = {
+	view: http.getControllerAction.bind(http),
+	middleware: http.getRouteMiddlewareAction.bind(http)
+}
+
+web(router, methods)
+api(router, methods)
 
 app.use('(/([a-z]{2}|)|)', router)
 
