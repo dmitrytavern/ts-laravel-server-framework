@@ -24,36 +24,37 @@ function routeFunction(req: Request, res: Response) {
 
 function routeLocalizedFunction(req: Request, res: Response) {
 	return function (string: string) {
-		let val = string
-		if (val === defaultLocale) val = ''
-		return path.join('/', val, req.url === '/' ? '' : req.url)
+		return path.join('/', string, req.url === '/' ? '' : req.url)
 	}
 }
 
 
 
 export default class Localization implements Middleware {
+	private current: string = 'ru'
+
 	handle(req: Request, res: Response, next: NextFunction) {
 		i18n.init(req, res)
+		const route = req.url.split('/')
 
-		const routeLocale = req.url.split('/')[1]
+		let routeLocale = ''
+		if (route[0] === '') route.splice(0, 1)
+		if (route[0] !== '') routeLocale = route[0]
 
-		if (locales.includes(routeLocale)) {
-			if (res.locale !== routeLocale) res.setLocale(routeLocale)
-		} else {
-			if (res.locale !== defaultLocale) res.setLocale(defaultLocale)
-		}
-
-
-		if (routeLocale === defaultLocale) {
-			res.status(404);
-			res.send({error: 'Not found'});
-			return void (0);
-		}
 
 		res.locals.route = routeFunction(req, res)
 		res.locals.routeLocalized = routeLocalizedFunction(req, res)
 
+
+		if (locales.includes(routeLocale)) {
+			route.splice(0, 1)
+
+			this.current = routeLocale
+
+			res.redirect(path.join('/', route.join('/')))
+		}
+
+		req.setLocale(this.current)
 		next()
 	}
 }

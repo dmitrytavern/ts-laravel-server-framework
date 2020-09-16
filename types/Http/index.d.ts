@@ -1,4 +1,12 @@
-import Express from "express";
+import { IApp } from "../../bootstrap/App";
+
+declare global {
+	namespace NodeJS {
+		interface Process {
+			app: IApp
+		}
+	}
+}
 
 declare global {
 	class Middleware {
@@ -13,13 +21,17 @@ declare global {
 
 	namespace HttpKernel {
 		export type KernelMiddleware = Array<string>
-		export interface KernelRouteMiddleware {
+		export interface KernelMiddlewareRoute {
 			[key: string]: string
+		}
+		export interface KernelMiddlewareGroup {
+			[key: string]: string[]
 		}
 
 		export interface Class {
 			middleware: KernelMiddleware
-			routeMiddleware: KernelRouteMiddleware
+			middlewareRoute: KernelMiddlewareRoute
+			middlewareGroup: KernelMiddlewareGroup
 		}
 	}
 }

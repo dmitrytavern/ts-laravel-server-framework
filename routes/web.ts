@@ -1,4 +1,6 @@
-export default function (app: Router, { view, middleware }: RouterActions): void {
+export default function (app: Router): void {
+	const { view, middleware } = process.app.router
+
 
 	app.get('/', view('MainController@index'))
 	app.get('/api', middleware('auth'), view('MainController@index'))

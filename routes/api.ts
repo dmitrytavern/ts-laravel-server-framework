@@ -1,1 +1,1 @@
-export default function (app: Router, { view, middleware }: RouterActions): void {}
+export default function (app: Router): void {}

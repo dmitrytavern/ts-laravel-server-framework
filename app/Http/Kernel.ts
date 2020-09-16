@@ -1,7 +1,7 @@
 export default class Kernel implements HttpKernel.Class {
 
 	/*
-	*   Global middleware
+	*  Middleware global
 	* */
 
 	public readonly middleware: HttpKernel.KernelMiddleware = [
@@ -11,10 +11,20 @@ export default class Kernel implements HttpKernel.Class {
 
 
 	/*
-	*   Route middleware
+	*   Middleware route
 	* */
 
-	public readonly routeMiddleware: HttpKernel.KernelRouteMiddleware = {
+	public readonly middlewareRoute: HttpKernel.KernelMiddlewareRoute = {
 		'auth': 'app/Http/Middleware/Authenticate'
+	}
+
+
+
+	/*
+	*   Middleware group
+	* */
+
+	public readonly middlewareGroup: HttpKernel.KernelMiddlewareGroup = {
+
 	}
 }

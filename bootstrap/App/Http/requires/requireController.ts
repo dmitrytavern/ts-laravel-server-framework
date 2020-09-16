@@ -25,7 +25,7 @@ export default function requireControllers() {
 			controllers[basePath] = Controller
 
 		} else {
-			console.error(`[HTTP]: Invalid controller type. File ${fullPath}`)
+			throw new Error(`[HTTP]: Invalid controller type. File ${fullPath}`)
 		}
 	}
 

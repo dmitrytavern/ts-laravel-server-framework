@@ -4,12 +4,10 @@ import * as express from 'express'
 import * as helmet from "helmet"
 import * as cookieParser from "cookie-parser"
 
-import Http from "@vendor/http"
-
-const app 		= express()
-const router 	= express.Router()
-const http    = new Http()
-
+const app 		          = express()
+const expressWebRouter  = express.Router()
+const expressApiRouter  = express.Router()
+const { http }          = process.app
 
 
 /*
@@ -33,15 +31,15 @@ app.set('view engine', 'pug')
 * 	Init static directories
 * */
 
-app.use(express.static(process.env.PATH_PUBLIC!))
+expressWebRouter.use(express.static(process.env.PATH_PUBLIC!))
 
 
 /*
 * 	Init middleware
 * */
 
-for (const middleware of http.getGlobalMiddleware()) {
-	app.use(middleware)
+for (const middleware of http.getMiddlewareGlobal()) {
+	expressWebRouter.use(middleware)
 }
 
 
@@ -52,16 +50,12 @@ for (const middleware of http.getGlobalMiddleware()) {
 import web from "@routes/web"
 import api from "@routes/api"
 
-const methods: RouterActions = {
-	view: http.getControllerAction.bind(http),
-	middleware: http.getMiddleware.bind(http)
-}
+web(expressWebRouter)
+api(expressApiRouter)
 
-web(router, methods)
-api(router, methods)
+app.use('/', expressWebRouter)
+app.use('/api', expressApiRouter)
 
-app.use('(/([a-z]{2}|)|)', router)
-
-
-
-export default app
+app.listen(8081, () => {
+	console.log('[APP]: Server started')
+})
